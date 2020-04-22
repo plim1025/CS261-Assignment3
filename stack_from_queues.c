@@ -3,8 +3,8 @@
  * a stack using two queues.  Make sure to add your name and @oregonstate.edu
  * email address below:
  *
- * Name:
- * Email:
+ * Name: Paul Lim
+ * Email: limp@oregonstate.edu
  */
 
 #include <stdio.h>
