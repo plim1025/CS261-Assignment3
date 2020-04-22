@@ -20,7 +20,6 @@
  */
 struct queue_from_stacks* queue_from_stacks_create() {
   struct queue_from_stacks* queue_from_stacks = malloc(sizeof(struct queue_from_stacks));
-  assert(queue_from_stacks);
   queue_from_stacks->s1 = stack_create();
   queue_from_stacks->s2 = stack_create();
   return queue_from_stacks;

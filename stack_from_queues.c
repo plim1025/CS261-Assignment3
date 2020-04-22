@@ -8,6 +8,8 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
 
 #include "queue.h"
 #include "stack_from_queues.h"
@@ -17,7 +19,10 @@
  * your stack and return a pointer to the stack structure.
  */
 struct stack_from_queues* stack_from_queues_create() {
-  return NULL;
+  struct stack_from_queues* stack_from_queues = malloc(sizeof(struct stack_from_queues));
+  stack_from_queues->q1 = queue_create();
+  stack_from_queues->q2 = queue_create();
+  return stack_from_queues;
 }
 
 /*
@@ -29,7 +34,10 @@ struct stack_from_queues* stack_from_queues_create() {
  *     exit the program with an error if stack is NULL.
  */
 void stack_from_queues_free(struct stack_from_queues* stack) {
-
+  assert(stack);
+  queue_free(stack->q1);
+  queue_free(stack->q2);
+  free(stack);
 }
 
 /*
@@ -44,7 +52,10 @@ void stack_from_queues_free(struct stack_from_queues* stack) {
  *   Should return 1 if the stack is empty or 0 otherwise.
  */
 int stack_from_queues_isempty(struct stack_from_queues* stack) {
-  return 1;
+  assert(stack);
+  int q1_empty = queue_isempty(stack->q1);
+  int q2_empty = queue_isempty(stack->q2);
+  return q1_empty && q2_empty;
 }
 
 /*
@@ -56,7 +67,15 @@ int stack_from_queues_isempty(struct stack_from_queues* stack) {
  *   value - the new value to be pushed onto the stack
  */
 void stack_from_queues_push(struct stack_from_queues* stack, int value) {
-
+  assert(stack);
+  queue_enqueue(stack->q2, value);
+  while(!queue_isempty(stack->q1)) {
+    queue_enqueue(stack->q2, queue_front(stack->q1));
+    queue_dequeue(stack->q1);
+  }
+  struct queue* temp = stack->q1;
+  stack->q1 = stack->q2;
+  stack->q2 = temp;
 }
 
 /*
@@ -72,7 +91,8 @@ void stack_from_queues_push(struct stack_from_queues* stack, int value) {
  *   Should return the value stored at the top of the stack.
  */
 int stack_from_queues_top(struct stack_from_queues* stack) {
-  return 0;
+  assert(stack);
+  return queue_front(stack->q1);
 }
 
 /*
@@ -88,5 +108,6 @@ int stack_from_queues_top(struct stack_from_queues* stack) {
  *   is popped.
  */
 int stack_from_queues_pop(struct stack_from_queues* stack) {
-  return 0;
+  assert(stack);
+  return queue_dequeue(stack->q1);
 }
